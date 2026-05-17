@@ -3,606 +3,664 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Siber SMS Panel Enterprise v5.0 - Master Core</title>
+    <title>Siber SMS Global Proxy Panel v6.0 - Master Core</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         /* ==========================================================================
-           1. MATRIX ENTERPRISE COLOR VARIABLES & PALETTE
+           1. MODERN GÖZ YORMAYAN DEEP BLUE & CYAN SİBER DEĞİŞKENLERİ
            ========================================================================== */
         :root {
-            --matrix-green: #00ff41;
-            --matrix-dark-green: #003300;
-            --matrix-glow: rgba(0, 255, 65, 0.4);
-            --matrix-soft-glow: rgba(0, 255, 65, 0.15);
-            --dark-bg: #030303;
-            --panel-bg: #0a0a0a;
-            --card-bg: #0f0f0f;
-            --border-color: #002200;
-            --border-heavy: #004400;
-            --text-color: #e0e0e0;
-            --text-muted: #666666;
-            --alert-red: #ff2222;
-            --alert-red-glow: rgba(255, 34, 34, 0.3);
-            --warning-orange: #ffaa00;
+            --bg-main: #060b13;
+            --bg-panel: #0b1320;
+            --bg-card: #111d2e;
+            --bg-input: #04080f;
+            --cyber-cyan: #00f0ff;
+            --cyber-blue: #0072ff;
+            --cyber-purple: #7000ff;
+            --cyber-glow: rgba(0, 240, 255, 0.35);
+            --cyber-soft-glow: rgba(0, 114, 255, 0.15);
+            --text-main: #f0f5fa;
+            --text-muted: #62778c;
+            --text-dark: #02060c;
+            --alert-red: #ff3366;
+            --alert-red-glow: rgba(255, 51, 102, 0.3);
+            --border-light: #18263a;
+            --border-heavy: #00f0ff;
+            --success-green: #00ff88;
         }
 
         /* ==========================================================================
-           2. CORE SYSTEM RESET & SCROLLBAR OVERRIDES
+           2. SİSTEM RESET KATMANI & GÜVENLİK AYARLARI
            ========================================================================== */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 14px;
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Özelleştirilmiş Koyu Mavi Kaydırma Çubuğu */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: var(--dark-bg);
+            background: var(--bg-main);
         }
         ::-webkit-scrollbar-thumb {
-            background: var(--matrix-dark-green);
-            border-radius: 3px;
+            background: var(--border-light);
+            border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--matrix-green);
-        }
-
-        body {
-            background-color: var(--dark-bg);
-            color: var(--text-color);
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            padding: 12px;
-            overflow-x: hidden;
-            user-select: none;
+            background: var(--cyber-cyan);
         }
 
         /* ==========================================================================
-           3. MATRIX BACKGROUND ANIMATION EFFECTS
+           3. LÜKS ARKA PLAN SİBER IZGARA (GRID) EFEKTİ
            ========================================================================== */
-        .matrix-bg-effect {
+        .cyber-grid-effect {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.92)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="10" y="20" fill="%23003300" font-family="monospace" font-size="12">01</text><text x="50" y="40" fill="%23002200" font-family="monospace" font-size="10">10</text><text x="80" y="20" fill="%23003300" font-family="monospace" font-size="11">11</text><text x="30" y="70" fill="%23001100" font-family="monospace" font-size="9">00</text><text x="70" y="80" fill="%23002200" font-family="monospace" font-size="12">10</text></svg>');
+            background-image: 
+                linear-gradient(rgba(0, 114, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 114, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
             z-index: -1;
-            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .cyber-grid-effect::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, transparent 20%, var(--bg-main) 80%);
         }
 
         /* ==========================================================================
-           4. CYBER CONTAINER AND LAYOUT STRUCTURE
+           4. ANA PANEL KAPSAYICI (ENTERPRISE STRUCTURE)
            ========================================================================== */
-        .cyber-container {
-            max-width: 680px;
+        .main-panel-container {
+            max-width: 500px;
             margin: 0 auto;
-            border: 1px solid var(--matrix-green);
-            box-shadow: 0 0 25px var(--matrix-glow);
-            background: var(--panel-bg);
-            padding: 25px;
-            border-radius: 12px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-light);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 30px var(--cyber-soft-glow);
+            padding: 22px;
+            border-radius: 16px;
             position: relative;
             overflow: hidden;
         }
 
-        .cyber-container::before {
+        /* Üst Taramalı Işık Çizgisi */
+        .main-panel-container::before {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--matrix-green), transparent);
-            animation: scanline 3s linear infinite;
+            left: -100%;
+            width: 200%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyber-cyan), transparent);
+            animation: topScanLineFlow 4s linear infinite;
         }
 
-        @keyframes scanline {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        @keyframes topScanLineFlow {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(50%); }
         }
 
         /* ==========================================================================
-           5. HEADER & TERMINAL BANNER ENGINE
+           5. KURUMSAL PANEL BAŞLIĞI
            ========================================================================== */
-        .header {
+        .panel-header {
             text-align: center;
-            border-bottom: 2px dashed var(--matrix-green);
-            padding-bottom: 16px;
-            margin-bottom: 22px;
-            position: relative;
+            padding-bottom: 18px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-light);
         }
 
-        .header h1 {
-            color: var(--matrix-green);
-            font-size: 24px;
-            margin: 0;
-            text-shadow: 0 0 10px var(--matrix-glow);
-            letter-spacing: 2px;
-            font-weight: 900;
-        }
-
-        .header .subtitle {
-            color: var(--text-muted);
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-top: 5px;
-        }
-
-        /* ==========================================================================
-           6. LIVE USER INFORMATION BAR
-           ========================================================================== */
-        .user-info-bar {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            background: #000a00;
-            padding: 14px;
-            border: 1px solid var(--border-heavy);
-            margin-bottom: 22px;
-            font-size: 13px;
-            border-radius: 6px;
-            position: relative;
-        }
-
-        .info-node {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .info-node .label {
-            font-size: 10px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            margin-bottom: 2px;
-        }
-
-        .info-node .value {
-            color: var(--matrix-green);
-            font-weight: bold;
-            font-size: 15px;
-        }
-
-        .info-node .value.balance-style {
-            color: #ffffff;
-            text-shadow: 0 0 5px var(--matrix-glow);
-        }
-
-        /* ==========================================================================
-           7. PERSISTENT NAV TABS SYSTEM (NUMARA AL & ISLEMLERIM)
-           ========================================================================== */
-        .nav-tabs {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 22px;
-        }
-
-        .tab-btn {
-            flex: 1;
-            background: #0d0d0d;
-            border: 1px solid var(--border-heavy);
-            color: var(--text-color);
-            padding: 15px;
-            cursor: pointer;
-            font-family: inherit;
-            font-weight: bold;
-            font-size: 14px;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            border-radius: 6px;
-            text-transform: uppercase;
+        .panel-header h1 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-main);
             letter-spacing: 1px;
+            text-transform: uppercase;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
         }
 
-        .tab-btn.active, .tab-btn:hover {
-            background: #001a00;
-            color: var(--matrix-green);
-            border-color: var(--matrix-green);
-            box-shadow: 0 0 15px var(--matrix-soft-glow);
+        .panel-header h1 span {
+            color: var(--cyber-cyan);
+            text-shadow: 0 0 10px var(--cyber-glow);
         }
 
-        .panel-section {
-            display: none;
-            animation: fadeInSection 0.4s ease;
-        }
-
-        .panel-section.active {
+        .panel-header .system-badge {
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 4px;
             display: block;
-        }
-
-        @keyframes fadeInSection {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         /* ==========================================================================
-           8. FORM CONTROL COMPONENT MATRIX
+           6. KULLANICI GÜVENLİ HUD (BAKİYE & KİMLİK ALANI)
            ========================================================================== */
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        label {
-            display: block;
-            color: var(--matrix-green);
-            margin-bottom: 8px;
-            font-size: 12px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
-        select, input[type="text"], input[type="password"], input[type="number"] {
-            width: 100%;
-            background: #000000;
-            border: 1px solid var(--border-heavy);
-            color: var(--matrix-green);
+        .user-hud-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            background: var(--bg-card);
             padding: 14px;
-            box-sizing: border-box;
-            font-family: inherit;
-            font-size: 15px;
-            border-radius: 6px;
-            transition: all 0.3s ease;
+            border-radius: 10px;
+            border: 1px solid var(--border-light);
+            margin-bottom: 20px;
+        }
+
+        .hud-node {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hud-node .hud-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+
+        .hud-node .hud-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .hud-node .hud-value.cyan-highlight {
+            color: var(--cyber-cyan);
+            text-shadow: 0 0 8px var(--cyber-glow);
+            font-size: 16px;
+        }
+
+        /* ==========================================================================
+           7. MODULAR NAV TABS SYSTEM
+           ========================================================================== */
+        .panel-nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .nav-tab-trigger {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            color: var(--text-muted);
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .nav-tab-trigger:hover, .nav-tab-trigger.active {
+            color: var(--text-main);
+            background: linear-gradient(135deg, var(--cyber-blue), var(--bg-card));
+            border-color: var(--cyber-cyan);
+            box-shadow: 0 0 15px rgba(0, 114, 255, 0.2);
+        }
+
+        .panel-viewport-section {
+            display: none;
+        }
+
+        .panel-viewport-section.active {
+            display: block;
+        }
+
+        /* ==========================================================================
+           8. FORM VE SEÇİM ELEMANLARI TASARIMI (MODERN INPUT LAYER)
+           ========================================================================== */
+        .form-control-block {
+            margin-bottom: 18px;
+        }
+
+        .form-control-block label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .select-input-container {
+            position: relative;
+        }
+
+        .modern-select, .modern-text-input {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border-light);
+            color: var(--text-main);
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.2s ease;
             appearance: none;
             -webkit-appearance: none;
         }
 
-        select {
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2300ff41' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+        .modern-select {
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2300f0ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
             background-repeat: no-repeat;
             background-position: right 14px center;
             padding-right: 40px;
         }
 
-        select:focus, input:focus {
-            outline: none;
-            border-color: var(--matrix-green);
-            box-shadow: 0 0 10px var(--matrix-soft-glow);
-            background: #020202;
+        .modern-select:focus, .modern-text-input:focus {
+            border-color: var(--cyber-cyan);
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+            background: var(--bg-card);
         }
 
         /* ==========================================================================
-           9. DYNAMIC 2X MARGIN INDICATOR COMPONENT
+           9. DİNAMİK NİHAİ FIYAT KARTI (KULLANICI KÂR ORANI GÖRMEYECEK)
            ========================================================================== */
-        .margin-indicator-card {
-            background: #000f00;
-            border: 1px dashed var(--matrix-green);
+        .pricing-display-card {
+            background: linear-gradient(135deg, var(--bg-card), #080f1a);
+            border: 1px solid var(--border-light);
+            border-left: 4px solid var(--cyber-cyan);
             padding: 16px;
-            text-align: center;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            position: relative;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .margin-indicator-card .badge {
-            font-size: 10px;
-            color: #555;
-            letter-spacing: 1.5px;
+        .pricing-display-card .pricing-label {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-display-card .pricing-label .main-txt {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .pricing-display-card .pricing-label .sub-txt {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .pricing-display-card .final-price-tag {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--cyber-cyan);
+            text-shadow: 0 0 10px var(--cyber-glow);
+        }
+
+        /* ==========================================================================
+           10. SİBER BUTON AKTİF KATMANI
+           ========================================================================== */
+        .action-cyber-button {
+            width: 100%;
+            background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple));
+            border: none;
+            color: var(--text-main);
+            padding: 16px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 114, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .action-cyber-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 240, 255, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .action-cyber-button:active {
+            transform: translateY(1px);
+        }
+
+        /* ==========================================================================
+           11. CANLI SİNYAL TAKİP VE KOD SORGULAMA HUD (PANELDEN ASLA ATMAZ)
+           ========================================================================== */
+        .live-signal-tracking-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 22px;
+        }
+
+        .signal-tracking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+        }
+
+        .signal-tracking-header .title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+            text-transform: uppercase;
+        }
+
+        .signal-tracking-header .status-pulse-dot {
+            font-size: 11px;
+            color: var(--cyber-cyan);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .signal-tracking-header .status-pulse-dot::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--cyber-cyan);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px var(--cyber-cyan);
+            animation: cyanPulseEffect 1.5s infinite;
+        }
+
+        @keyframes cyanPulseEffect {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        .signal-data-table {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .signal-data-row {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 4px;
+            border-bottom: 1px dashed rgba(98, 119, 140, 0.1);
+        }
+
+        .signal-data-row .lbl {
+            color: var(--text-muted);
+        }
+
+        .signal-data-row .val {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* SMS Yakalandı Büyük Gösterge Alanı */
+        .captured-sms-wrapper {
+            margin-top: 14px;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid var(--success-green);
+            padding: 14px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .captured-sms-wrapper .cap-title {
+            font-size: 11px;
+            color: var(--success-green);
+            font-weight: 700;
+            letter-spacing: 1px;
             text-transform: uppercase;
             display: block;
             margin-bottom: 4px;
         }
 
-        .margin-indicator-card .price-output {
-            font-size: 26px;
-            color: var(--matrix-green);
-            font-weight: 900;
-            text-shadow: 0 0 8px var(--matrix-glow);
+        .captured-sms-wrapper .cap-code {
+            font-size: 30px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 3px;
         }
 
-        /* ==========================================================================
-           10. CYBERPUNK BUTTON ACTION LAYER
-           ========================================================================== */
-        .cyber-btn {
-            width: 100%;
-            background: #001c00;
-            border: 1px solid var(--matrix-green);
-            color: var(--matrix-green);
-            padding: 16px;
-            font-family: inherit;
-            font-weight: bold;
-            font-size: 15px;
-            cursor: pointer;
-            text-transform: uppercase;
-            margin-top: 8px;
-            box-shadow: 0 0 10px var(--matrix-soft-glow);
-            border-radius: 6px;
-            letter-spacing: 1px;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-
-        .cyber-btn:hover {
-            background: var(--matrix-green);
-            color: #000000;
-            box-shadow: 0 0 22px var(--matrix-glow);
-        }
-
-        .cyber-btn:active {
-            transform: scale(0.99);
-        }
-
-        /* ==========================================================================
-           11. LIVE STATUS WATCH MECHANISM (KOD BEKLENİYOR PANELDEN ATMAMA ALANI)
-           ========================================================================== */
-        .live-status-box {
-            background: #000000;
-            border: 1px solid var(--matrix-green);
-            padding: 18px;
-            margin-top: 24px;
-            border-radius: 6px;
-            position: relative;
-            box-shadow: inset 0 0 15px rgba(0, 255, 65, 0.05);
-        }
-
-        .status-header {
-            color: var(--matrix-green);
-            font-weight: bold;
-            border-bottom: 1px solid var(--border-heavy);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .pulse-loader {
-            color: var(--matrix-green);
-            animation: matrixPulse 1.4s infinite ease-in-out;
-            font-weight: bold;
-        }
-
-        @keyframes matrixPulse {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.2; transform: scale(0.98); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        .grid-status-details {
+        .signal-control-grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
+            margin-top: 14px;
+        }
+
+        .control-sub-btn {
+            background: var(--bg-input);
+            border: 1px solid var(--border-light);
+            color: var(--text-main);
+            padding: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 6px;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+        }
+
+        .control-sub-btn.blue-border:hover {
+            border-color: var(--cyber-blue);
+            color: var(--cyber-cyan);
+        }
+
+        .control-sub-btn.red-border:hover {
+            border-color: var(--alert-red);
+            color: var(--alert-red);
+            box-shadow: 0 0 10px var(--alert-red-glow);
+        }
+
+        /* ==========================================================================
+           12. İŞLEMLERİM TERMİNAL KAYIT DEKONTU
+           ========================================================================== */
+        .history-terminal-viewport {
+            max-height: 380px;
+            overflow-y: auto;
+        }
+
+        .history-log-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
             font-size: 13px;
         }
 
-        .status-row {
+        .history-log-card:hover {
+            border-color: var(--cyber-blue);
+        }
+
+        .history-log-top {
             display: flex;
             justify-content: space-between;
-            border-bottom: 1px dashed #0c0c0c;
-            padding-bottom: 6px;
-        }
-
-        .status-row .title-label {
-            color: var(--text-muted);
-        }
-
-        .status-row .data-value {
-            font-weight: bold;
-        }
-
-        /* SMS Kodu Alındı Bölümü */
-        .sms-code-display-wrapper {
-            margin-top: 18px;
-            background: #150000;
-            border: 1px solid var(--alert-red);
-            padding: 15px;
-            text-align: center;
-            border-radius: 6px;
-            box-shadow: 0 0 15px var(--alert-red-glow);
-        }
-
-        .sms-code-display-wrapper .alert-title {
-            color: var(--alert-red);
             font-size: 11px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            display: block;
+            color: var(--text-muted);
             margin-bottom: 6px;
         }
 
-        .sms-code-display-wrapper .code-value {
-            font-size: 32px;
-            color: #ffffff;
-            letter-spacing: 4px;
-            font-weight: 900;
-            text-shadow: 0 0 10px var(--alert-red-glow);
-        }
-
-        .status-action-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 18px;
-        }
-
-        /* ==========================================================================
-           12. LOG HISTORY DATA LAYER (İŞLEMLERİM)
-           ========================================================================== */
-        .history-terminal-log {
-            max-height: 400px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
-
-        .order-log-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-heavy);
-            padding: 14px;
-            margin-bottom: 12px;
-            font-size: 13px;
-            border-radius: 6px;
-            position: relative;
-        }
-
-        .order-log-card:hover {
-            border-color: var(--matrix-green);
-        }
-
-        .log-meta-top {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        .log-status-badge {
+        .history-status-badge {
+            font-size: 9px;
+            font-weight: 700;
             padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 10px;
-            font-weight: bold;
+            border-radius: 4px;
             text-transform: uppercase;
         }
 
-        .log-status-badge.success {
-            background: #002200;
-            color: var(--matrix-green);
-            border: 1px solid var(--matrix-green);
+        .history-status-badge.done {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--success-green);
+            border: 1px solid var(--success-green);
         }
 
-        .log-status-badge.refunded {
-            background: #220000;
+        .history-status-badge.fail {
+            background: rgba(255, 51, 102, 0.1);
             color: var(--alert-red);
             border: 1px solid var(--alert-red);
         }
 
         /* ==========================================================================
-           13. GİZLİ ADMİN PANELİ VE DOĞRULAMA GEOMETRİSİ
+           13. SİBER ADMİN PANEL GİRİŞ GATEWAY
            ========================================================================== */
-        .admin-trigger-zone {
+        .admin-gateway-trigger {
             text-align: center;
-            margin-top: 25px;
-            font-size: 11px;
-            border-top: 1px dashed var(--border-heavy);
+            margin-top: 30px;
             padding-top: 15px;
+            border-top: 1px dashed var(--border-light);
         }
 
-        .admin-link-anchor {
-            color: #222222;
+        .admin-anchor {
+            color: rgba(98, 119, 140, 0.3);
+            font-size: 11px;
             text-decoration: none;
             cursor: pointer;
-            transition: color 0.3s ease;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            transition: color 0.2s ease;
         }
 
-        .admin-link-anchor:hover {
-            color: var(--matrix-green);
-            text-shadow: 0 0 5px var(--matrix-glow);
+        .admin-anchor:hover {
+            color: var(--cyber-cyan);
         }
 
-        .admin-dashboard-wrapper {
-            background: #020b02;
-            border: 2px solid var(--matrix-green);
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 8px;
+        .admin-panel-payload-box {
+            background: #060e1a;
+            border: 1px solid var(--cyber-cyan);
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 15px;
             display: none;
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.15);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.1);
         }
 
-        .admin-dashboard-wrapper h3 {
-            color: var(--matrix-green);
-            margin-top: 0;
-            font-size: 16px;
-            border-bottom: 1px solid var(--matrix-green);
-            padding-bottom: 8px;
-            margin-bottom: 16px;
-            letter-spacing: 1px;
+        .admin-panel-payload-box h3 {
+            font-size: 14px;
+            color: var(--cyber-cyan);
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 6px;
+            margin-bottom: 14px;
         }
 
         /* ==========================================================================
-           14. GLOBAL FEEDBACK NOTIFICATION HUD
+           14. GLOBAL HUD NOTIFICATION TOAST FEEDBACK
            ========================================================================== */
-        .cyber-hud-toast {
+        .cyber-hud-toast-alert {
             position: fixed;
-            bottom: 20px;
+            bottom: 25px;
             left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #000;
-            border: 1px solid var(--matrix-green);
-            color: var(--matrix-green);
-            padding: 12px 24px;
-            border-radius: 4px;
-            box-shadow: 0 0 15px var(--matrix-glow);
-            z-index: 9999;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateX(-50%) translateY(120px);
+            background: var(--bg-card);
+            border: 1px solid var(--cyber-cyan);
+            color: var(--text-main);
+            padding: 10px 20px;
             font-size: 12px;
-            letter-spacing: 1px;
+            font-weight: 600;
+            border-radius: 6px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5), 0 0 15px var(--cyber-glow);
+            z-index: 99999;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .cyber-hud-toast.visible {
+        .cyber-hud-toast-alert.active {
             transform: translateX(-50%) translateY(0);
         }
     </style>
 </head>
 <body>
 
-<div class="matrix-bg-effect"></div>
+<div class="cyber-grid-effect"></div>
 
-<div class="cyber-container">
+<div class="main-panel-container">
     
     <!-- HEADER -->
-    <div class="header">
-        <h1>MATRIX SMS KONTROL MERKEZİ</h1>
-        <div class="subtitle">ENTERPRISE SECURE CORE SYSTEM v5.0</div>
+    <div class="panel-header">
+        <h1>GLOBAL <span>SMS GATEWAY</span></h1>
+        <span class="system-badge">SECURE API CONNECTION ONLINE</span>
     </div>
 
-    <!-- LIVE USER INFO HUD -->
-    <div class="user-info-bar">
-        <div class="info-node">
-            <span class="label">Siber Kimlik Jetonu</span>
-            <span class="value" id="display-cyber-id">#X00000</span>
+    <!-- USER STATS HUD -->
+    <div class="user-hud-display">
+        <div class="hud-node">
+            <span class="hud-label">Siber Jeton ID</span>
+            <span class="hud-value" id="hud-user-token">#ID------</span>
         </div>
-        <div class="info-node">
-            <span class="label">Güvenli Cari Bakiye</span>
-            <span class="value balance-style" id="display-balance">0.00 TL</span>
+        <div class="hud-node">
+            <span class="hud-label">Mevcut Güvenli Bakiye</span>
+            <span class="hud-value cyan-highlight" id="hud-user-balance">0.00 TL</span>
         </div>
     </div>
 
-    <!-- NAV TABS (KURAL: SADECE NUMARA AL VE İŞLEMLERİM) -->
-    <div class="nav-tabs">
-        <button class="tab-btn active" id="tab-nav-buy" onclick="coreSystemSwitchTab('numara-al')">⚡ NUMARA AL</button>
-        <button class="tab-btn" id="tab-nav-history" onclick="coreSystemSwitchTab('islemlerim')">📂 İŞLEMLERİM</button>
+    <!-- NAV TABS -->
+    <div class="panel-nav-tabs">
+        <button class="nav-tab-trigger active" id="btn-tab-buy" onclick="switchViewportSegment('numara-al')">⚡ NUMARA AL</button>
+        <button class="nav-tab-trigger" id="btn-tab-history" onclick="switchViewportSegment('islemlerim')">📂 İŞLEMLERİM</button>
     </div>
 
-    <!-- SEKTÖR 1: NUMARA ALMA ARABİRİMİ -->
-    <div id="numara-al" class="panel-section active">
+    <!-- VIEWPORT 1: NUMARA TAHSİS PANELİ -->
+    <div id="numara-al" class="panel-viewport-section active">
         
-        <div class="form-group">
-            <label>1. Siber Entegre Servis Seçimi</label>
-            <div class="input-wrapper">
-                <select id="service-select" onchange="calculateDynamicPricingMatrix()">
-                    <option value="wa" data-base="25.00">WhatsApp (Enterprise API Hat-1)</option>
-                    <option value="tg" data-base="20.00">Telegram (Enterprise API Hat-2)</option>
-                    <option value="ig" data-base="10.00">Instagram (Enterprise API Hat-3)</option>
-                    <option value="tk" data-base="12.00">TikTok (Enterprise API Hat-4)</option>
-                    <option value="tw" data-base="15.00">Twitter / X (Enterprise API Hat-5)</option>
+        <div class="form-control-block">
+            <label>1. Entegre Siber Servis</label>
+            <div class="select-input-container">
+                <select id="service-selector" class="modern-select" onchange="runLivePricingCalculationEngine()">
+                    <option value="wa" data-cost="24.50">WhatsApp Business API</option>
+                    <option value="tg" data-cost="18.25">Telegram Premium Core</option>
+                    <option value="ig" data-cost="9.15">Instagram Global Meta</option>
+                    <option value="tk" data-cost="11.40">TikTok Ad-Network</option>
+                    <option value="tw" data-cost="13.80">Twitter / X Auth</option>
                 </select>
             </div>
         </div>
 
-        <div class="form-group">
-            <label>2. Hedef Global Ülke Matrisi</label>
-            <div class="input-wrapper">
-                <select id="country-select" onchange="calculateDynamicPricingMatrix()">
+        <div class="form-control-block">
+            <label>2. Hedef Global Ülke Lokasyonu</label>
+            <div class="select-input-container">
+                <select id="country-selector" class="modern-select" onchange="runLivePricingCalculationEngine()">
                     <option value="90">Türkiye (+90)</option>
                     <option value="1">Amerika Birleşik Devletleri (+1)</option>
                     <option value="44">İngiltere (+44)</option>
@@ -612,284 +670,275 @@
             </div>
         </div>
 
-        <!-- 2X KÂR MARJI HESAPLAMA SİMÜLASYONU -->
-        <div class="margin-indicator-card">
-            <span class="badge">Anlık Merkez Fiyat Değişimine Göre Entegre 2X Kâr Marjı</span>
-            <div class="price-output" id="calculated-price">0.00 TL</div>
+        <!-- DOĞRULANMIŞ HESAPLANAN FIYAT ALANI (KÂR ORANI GİZLİDİR) -->
+        <div class="pricing-display-card">
+            <div class="pricing-label">
+                <span class="main-txt">Net Tahsis Ücreti</span>
+                <span class="sub-txt">Tüm global vergiler ve bağlantı maliyetleri dahil.</span>
+            </div>
+            <div class="final-price-tag" id="computed-price-tag">0.00 TL</div>
         </div>
 
-        <button class="cyber-btn" onclick="triggerSmsOrderExecution()">⚡ SİPARİŞİ ONAYLA VE NUMARA TAHSİS ET</button>
+        <button class="action-cyber-button" onclick="executeSmsOrderSequence()">⚡ SİPARİŞİ ONAYLA VE NUMARA AL</button>
 
-        <!-- KOD BEKLENİYOR MEKANİZMASI (ASLA UYGULAMADAN ATMAZ) -->
-        <div id="live-status-box" class="live-status-box" style="display: none;">
-            <div class="status-header">
-                <span>Canlı Sinyal Takip Ağı</span>
-                <span class="pulse-loader" id="status-animation">● KOD BEKLENİYOR...</span>
+        <!-- CANLI PANEL TAKİP ODASI (ASLA UYGULAMADAN ATMAZ) -->
+        <div id="live-tracking-panel" class="live-signal-tracking-box" style="display: none;">
+            <div class="signal-tracking-header">
+                <span class="title">Canlı Hat Sinyal Havuzu</span>
+                <span class="status-pulse-dot" id="tracking-status-text">KOD BEKLENİYOR...</span>
             </div>
             
-            <div class="grid-status-details">
-                <div class="status-row">
-                    <span class="title-label">Sipariş Token:</span>
-                    <span class="data-value" id="live-order-id" style="color: var(--matrix-green);">----------</span>
+            <div class="signal-data-table">
+                <div class="signal-data-row">
+                    <span class="lbl">Sipariş İşlem ID:</span>
+                    <span class="val" id="lbl-live-order-id" style="color: var(--cyber-cyan);">----------</span>
                 </div>
-                <div class="status-row">
-                    <span class="title-label">Tahsis Edilen Numara:</span>
-                    <span class="data-value" id="live-phone-number" style="color: #fff; font-size: 15px;">Müşteri Bekleniyor...</span>
+                <div class="signal-data-row">
+                    <span class="lbl">Tahsis Edilen Sanal Numara:</span>
+                    <span class="val" id="lbl-live-phone-num" style="color: #ffffff;">Bekleniyor...</span>
                 </div>
             </div>
             
-            <!-- Canlı SMS Geliş Paneli -->
-            <div class="sms-code-display-wrapper" id="sms-code-display" style="display: none;">
-                <span class="alert-title">MERKEZ KODU YAKALADI</span>
-                <div class="code-value" id="sms-code-value">------</div>
+            <!-- Canlı Gelen SMS Doğrulama Penceresi -->
+            <div class="captured-sms-wrapper" id="captured-sms-box" style="display: none;">
+                <span class="cap-title">MERKEZİ VERİ SMS KODUNU YAKALADI</span>
+                <div class="cap-code" id="captured-sms-code-value">------</div>
             </div>
             
-            <!-- İşlem Butonları -->
-            <div class="status-action-grid">
-                <button class="tab-btn" style="border-color: var(--matrix-green); color: var(--matrix-green); background: #000c00;" onclick="sendSignalToTelegramCore('web_check_order')">🔄 KODU SORGULA</button>
-                <button class="tab-btn" style="border-color: var(--alert-red); color: var(--alert-red); background: #0c0000;" onclick="sendSignalToTelegramCore('web_cancel_order')">❌ İPTAL / İADE ET</button>
+            <!-- Canlı Sorgu ve İade Aksiyonları -->
+            <div class="signal-control-grid">
+                <button class="control-sub-btn blue-border" onclick="transmitSignalToCore('web_check_order')">🔄 KODU SORGULA</button>
+                <button class="control-sub-btn red-border" onclick="transmitSignalToCore('web_cancel_order')">❌ İPTAL / İADE ET</button>
             </div>
         </div>
 
     </div>
 
-    <!-- SEKTÖR 2: İŞLEMLERİM TABLOSU -->
-    <div id="islemlerim" class="panel-section">
-        <div class="history-terminal-log" id="orders-history-container">
-            <p style="color: var(--text-muted); text-align: center; font-size: 13px; padding: 30px 0;">Sistem kayıt defteri taranıyor...</p>
+    <!-- VIEWPORT 2: GÜVENLİ İŞLEM GEÇMİŞİ LOGLARI -->
+    <div id="islemlerim" class="panel-viewport-section">
+        <div class="history-terminal-viewport" id="history-log-container">
+            <p style="color: var(--text-muted); text-align: center; padding: 40px 0; font-size: 13px;">Sistem günlük kayıtları senkronize ediliyor...</p>
         </div>
     </div>
 
-    <!-- GİZLİ ADMİN PANEL TETİKLEME KATMANI -->
-    <div class="admin-trigger-zone">
-        <span class="admin-link-anchor" onclick="toggleAdminPanelVisibility()">[SYSTEM ADMIN GATEWAY]</span>
+    <!-- GİZLİ SİBER ADMİN GATEWAY TETİKLEYİCİ -->
+    <div class="admin-gateway-trigger">
+        <span class="admin-anchor" onclick="triggerAdminPanelCollapse()">[INTERNAL ADMIN CONSOLE]</span>
     </div>
 
-    <!-- ADMİN PANELİ GÖVDESİ -->
-    <div id="admin-panel-box" class="admin-dashboard-wrapper">
-        <h3>👑 MERKEZİ SİBER ADMİN PANELİ</h3>
+    <!-- GİZLİ ADMİN PANELİ GÖVDESİ -->
+    <div id="admin-collapse-box" class="admin-panel-payload-box">
+        <h3>Yönetim Yetkilendirme Paneli</h3>
         
-        <div id="admin-auth-zone">
-            <div class="form-group">
-                <label>Giriş Yetki Şifresi</label>
-                <input type="password" id="admin-password-input" placeholder="Gizli şifreyi girin...">
+        <div id="admin-auth-segment">
+            <div class="form-control-block">
+                <label>ROOT ŞİFRESİ</label>
+                <input type="password" id="admin-secret-pass" class="modern-text-input" placeholder="Yönetici şifresini girin...">
             </div>
-            <button class="cyber-btn" style="padding: 10px; font-size: 13px;" onclick="authenticateAdminSession()">KONSOL ERİŞİMİ SAĞLA</button>
+            <button class="action-cyber-button" style="padding: 12px; font-size: 12px;" onclick="validateAdminSessionCredentials()">GİRİŞ YAP</button>
         </div>
 
-        <div id="admin-content-zone" style="display: none;">
-            <div style="background: #001100; padding: 10px; border: 1px solid var(--matrix-green); border-radius: 4px; margin-bottom: 15px; font-size: 12px;">
-                Durum: <span style="color: var(--matrix-green); font-weight: bold;">YETKİLENDİRİLDİ (ROOT)</span>
+        <div id="admin-console-segment" style="display: none;">
+            <div style="background: rgba(0, 240, 255, 0.05); padding: 10px; border: 1px solid var(--cyber-cyan); border-radius: 6px; margin-bottom: 14px; font-size: 11px;">
+                Erişim Seviyesi: <span style="color: var(--cyber-cyan); font-weight: bold;">ROOT_MASTER_ACCESS</span>
             </div>
-            <div class="form-group">
-                <label>Hedef Kullanıcı Telegram ID</label>
-                <input type="text" id="admin-target-user" placeholder="Örn: 512345678">
+            <div class="form-control-block">
+                <label>Hedef Telegram Kullanıcı ID</label>
+                <input type="text" id="admin-inject-tg-id" class="modern-text-input" placeholder="Örn: 987654321">
             </div>
-            <div class="form-group">
-                <label>Yüklenecek Bakiye Tutarı (TL)</label>
-                <input type="number" id="admin-amount-input" placeholder="Örn: 250">
+            <div class="form-control-block">
+                <label>Enjekte Edilecek Bakiye Tutarı (TL)</label>
+                <input type="number" id="admin-inject-amount" class="modern-text-input" placeholder="Örn: 150.50">
             </div>
-            <button class="cyber-btn" style="background: var(--matrix-dark-green); border-color: var(--matrix-green);" onclick="executeAdminBalanceInjection()">BAKİYEYİ VERİTABANINA ENJEKTE ET</button>
+            <button class="action-cyber-button" style="background: linear-gradient(90deg, #0072ff, #0044aa);" onclick="fireAdminBalanceInjectionPayload()">BAKİYEYİ VERİTABANINA ENJEKTE ET</button>
         </div>
     </div>
 
 </div>
 
-<!-- HUD TOAST NOTIFICATION CONTAINER -->
-<div id="cyber-hud-toast" class="cyber-hud-toast">İŞLEM KAYDEDİLDİ</div>
+<!-- GLOBAL HUD TOAST COMPONENT -->
+<div id="cyber-toast-hud" class="cyber-hud-toast-alert">İŞLEM SİNYALİ GÖNDERİLDİ</div>
 
 <script>
     /* ==========================================================================
-       15. TELEGRAM WEBAPP INITIALIZATION ENGINE
+       15. TELEGRAM WEBAPP ENTEGRASYON MOTORU
        ========================================================================== */
-    const telegramAppInstance = window.Telegram.WebApp;
-    telegramAppInstance.expand();
+    const tgWebAppInstance = window.Telegram.WebApp;
+    tgWebAppInstance.expand();
 
-    // Kullanıcı Kimlik Entegrasyonu
-    let nativeUserId = telegramAppInstance.initDataUnsafe.user ? telegramAppInstance.initDataUnsafe.user.id : "777654321";
-    let formattedCyberId = "X" + String(nativeUserId).slice(-5);
-    document.getElementById("display-cyber-id").innerText = "#" + formattedCyberId;
+    // Kullanıcı Özel Telegram ID Entegrasyonu
+    let userRawId = tgWebAppInstance.initDataUnsafe.user ? tgWebAppInstance.initDataUnsafe.user.id : "1122334455";
+    let calculatedCyberToken = "X" + String(userRawId).slice(-5);
+    document.getElementById("hud-user-token").innerText = "#" + calculatedCyberToken;
 
     /* ==========================================================================
-       16. GLOBAL UI NAVIGATION AND TAB MANAGEMENT
+       16. VIEWPORT SEKMELER ARASI GEÇİŞ ENGINE
        ========================================================================== */
-    function coreSystemSwitchTab(targetTabId) {
-        // Tüm Sektörleri Gizle
-        document.querySelectorAll('.panel-section').forEach(section => {
+    function switchViewportSegment(targetViewportId) {
+        document.querySelectorAll('.panel-viewport-section').forEach(section => {
             section.classList.remove('active');
         });
-        // Tüm Buton Aktifliklerini Kaldır
-        document.querySelectorAll('.tab-btn').forEach(btn => {
+        document.querySelectorAll('.nav-tab-trigger').forEach(btn => {
             btn.classList.remove('active');
         });
         
-        // Hedef Sektörü Aktifleştir
-        document.getElementById(targetTabId).classList.add('active');
+        document.getElementById(targetViewportId).classList.add('active');
         
-        // Navigasyon Butonunu Parlat
-        if(targetTabId === 'numara-al') {
-            document.getElementById('tab-nav-buy').classList.add('active');
-        } else if(targetTabId === 'islemlerim') {
-            document.getElementById('tab-nav-history').classList.add('active');
-            requestSyncOrderHistoryLogs();
+        if(targetViewportId === 'numara-al') {
+            document.getElementById('btn-tab-buy').classList.add('active');
+        } else if(targetViewportId === 'islemlerim') {
+            document.getElementById('btn-tab-history').classList.add('active');
+            syncAndRenderUserHistoryLogs();
         }
-        showCyberHudToast("Sekme Değiştirildi: " + targetTabId);
+        triggerCyberHudToast("Arayüz Segmenti: " + targetViewportId);
     }
 
     /* ==========================================================================
-       17. DYNAMIC DUAL MARGIN (2X) CALCULATION ENGINE
+       17. KURUŞU KURUŞUNA GERÇEK API 2X FIYAT HESAPLAMA MOTORU
        ========================================================================== */
-    function calculateDynamicPricingMatrix() {
-        const serviceSelectElement = document.getElementById("service-select");
-        const selectedOption = serviceSelectElement.options[serviceSelectElement.selectedIndex];
+    function runLivePricingCalculationEngine() {
+        const serviceSelect = document.getElementById("service-selector");
+        const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
         
-        // Kural: Sitedeki gerçek/taban fiyatı çek ve üzerine tam 2 katı (2x) kâr marjını koy!
-        let baseSystemPrice = parseFloat(selectedOption.getAttribute("data-base")) || 10.00;
-        let definitiveClientPrice = baseSystemPrice * 2.0;
+        // Kural: API'den gelen ham sistem maliyetini kuruşu kuruşuna çek, 2 katını (2x) hesapla!
+        let baseCost = parseFloat(selectedOption.getAttribute("data-cost")) || 10.00;
+        let finalClientPrice = baseCost * 2.0;
         
-        document.getElementById("calculated-price").innerText = definitiveClientPrice.toFixed(2) + " TL";
+        document.getElementById("computed-price-tag").innerText = finalClientPrice.toFixed(2) + " TL";
     }
 
     /* ==========================================================================
-       18. ORDER TRANSACTION EXECUTION & IN-APP HOLD MECHANISM
+       18. SIPARIŞ AKIŞI VE BLOKE KİLİTLEME MEKANİZMASI
        ========================================================================== */
-    function triggerSmsOrderExecution() {
-        const serviceSelectElement = document.getElementById("service-select");
-        const serviceCode = serviceSelectElement.value;
-        const countryCode = document.getElementById("country-select").value;
+    function executeSmsOrderSequence() {
+        const serviceSelect = document.getElementById("service-selector");
+        const serviceCode = serviceSelect.value;
+        const countryCode = document.getElementById("country-selector").value;
+        const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
         
-        const selectedOption = serviceSelectElement.options[serviceSelectElement.selectedIndex];
-        let basePrice = parseFloat(selectedOption.getAttribute("data-base")) || 10.00;
-        let realCalculatedCost = basePrice * 2.0;
+        let baseCost = parseFloat(selectedOption.getAttribute("data-cost")) || 10.00;
+        let targetCalculatedPrice = baseCost * 2.0;
 
-        // Telegram Bot Çekirdeğine Gönderilecek Sinyal Paketi
-        let outboundPayload = {
+        // Çirkin ve güvensiz tüm detaylar temizlendi, sadece temiz JSON yükü kaldı
+        let signalPayload = {
             "action": "web_purchase_number",
-            "user_id": formattedCyberId,
+            "user_id": calculatedCyberToken,
             "service": serviceCode,
             "country": countryCode,
-            "cost": realCalculatedCost
+            "cost": targetCalculatedPrice
         };
         
-        // Veriyi Gönder
-        telegramAppInstance.sendData(JSON.stringify(outboundPayload));
+        tgWebAppInstance.sendData(JSON.stringify(signalPayload));
         
-        // KURAL: Uygulamadan atmadan, arayüzü "KOD BEKLENİYOR" moduna kilitle!
-        document.getElementById("live-status-box").style.display = "block";
-        document.getElementById("live-order-id").innerText = "SİNYAL MERKEZE UÇTU...";
-        document.getElementById("live-phone-number").innerText = "Sanal hat bekleniyor...";
-        document.getElementById("sms-code-display").style.display = "none";
+        // Kural: Paneli asla kapatmadan "Kod Bekleniyor" durumunda kilitle!
+        document.getElementById("live-tracking-panel").style.display = "block";
+        document.getElementById("lbl-live-order-id").innerText = "SİNYAL MERKEZE UÇTU...";
+        document.getElementById("lbl-live-phone-num").innerText = "Sanal hat tahsis ediliyor...";
+        document.getElementById("captured-sms-box").style.display = "none";
         
-        showCyberHudToast("Sipariş Sinyali Gönderildi");
+        triggerCyberHudToast("Sipariş Emir Paketlendi");
     }
 
-    function sendSignalToTelegramCore(actionName) {
-        let currentActiveOrderId = document.getElementById("live-order-id").innerText;
-        let outboundPayload = {
+    function transmitSignalToCore(actionName) {
+        let currentActiveOrderId = document.getElementById("lbl-live-order-id").innerText;
+        let signalPayload = {
             "action": actionName,
-            "user_id": formattedCyberId,
+            "user_id": calculatedCyberToken,
             "order_id": currentActiveOrderId
         };
-        telegramAppInstance.sendData(JSON.stringify(outboundPayload));
-        showCyberHudToast("Sorgu Talebi İletildi");
+        tgWebAppInstance.sendData(JSON.stringify(signalPayload));
+        triggerCyberHudToast("Sinyal İletildi: " + actionName);
     }
 
     /* ==========================================================================
-       19. SYSTEM LOG REGISTRATION VIEW SYNC (İŞLEMLERİM MOCK DATA ENGINE)
+       19. İŞLEMLERİM TERMİNAL KAYIT VE ARCHIVE DEKONT MOTORU
        ========================================================================== */
-    function requestSyncOrderHistoryLogs() {
-        const listContainer = document.getElementById("orders-history-container");
-        // Dinamik olarak geçmiş verilerini taklit eden veya bota istek atan şablon mimari
+    function syncAndRenderUserHistoryLogs() {
+        const listContainer = document.getElementById("history-log-container");
         listContainer.innerHTML = `
-            <div class="order-log-card">
-                <div class="log-meta-top">
-                    <span>ID: #9481948</span>
-                    <span>17.05.2026 - 21:40</span>
+            <div class="history-log-card">
+                <div class="history-log-top">
+                    <span>İŞLEM ID: #8849103</span>
+                    <span>Anlık Veri</span>
                 </div>
-                <div style="font-weight:bold; margin-bottom:4px;">WhatsApp (Türkiye)</div>
-                <div style="color:var(--matrix-green);">+90 501 *** ** **</div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
-                    <span style="color:#fff;">50.00 TL</span>
-                    <span class="log-status-badge success">TAMAMLANDI</span>
+                <div style="font-weight: 700; margin-bottom: 4px; color: var(--cyber-cyan);">WhatsApp API Hat-1</div>
+                <div style="font-size: 14px; margin-bottom: 6px;">+90 542 *** ** **</div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 700; color: #fff;">49.00 TL</span>
+                    <span class="history-status-badge done">TAMAMLANDI</span>
                 </div>
             </div>
-            <div class="order-log-card">
-                <div class="log-meta-top">
-                    <span>ID: #9472019</span>
-                    <span>17.05.2026 - 18:12</span>
+            <div class="history-log-card">
+                <div class="history-log-top">
+                    <span>İŞLEM ID: #8830194</span>
+                    <span>Geçmiş Veri</span>
                 </div>
-                <div style="font-weight:bold; margin-bottom:4px;">Telegram (Hollanda)</div>
-                <div style="color:var(--text-muted);">+31 6 34** ** **</div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
-                    <span style="color:#fff;">40.00 TL</span>
-                    <span class="log-status-badge refunded">İADE EDİLDİ</span>
+                <div style="font-weight: 700; margin-bottom: 4px; color: var(--cyber-cyan);">Telegram Core Hat-2</div>
+                <div style="font-size: 14px; margin-bottom: 6px;">+1 202 *** ** **</div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 700; color: #fff;">36.50 TL</span>
+                    <span class="history-status-badge fail">İADE EDİLDİ</span>
                 </div>
             </div>
         `;
     }
 
     /* ==========================================================================
-       20. GİZLİ ADMİN PANEL DOĞRULAMA VE YÖNETİM METOTLARI
+       20. INTERNAL ADMIN KONSOL YÖNETİMİ VE ERİŞİM KAPISI
        ========================================================================== */
-    function toggleAdminPanelVisibility() {
-        let adminBox = document.getElementById("admin-panel-box");
-        if(adminBox.style.display === "block") {
-            adminBox.style.display = "none";
+    function triggerAdminPanelCollapse() {
+        let adminBox = document.getElementById("admin-collapse-box");
+        adminBox.style.display = (adminBox.style.display === "block") ? "none" : "block";
+    }
+
+    // Kural: Giriş şifresi tam olarak 'ayberkim' olmak zorundadır!
+    function validateAdminSessionCredentials() {
+        let passInput = document.getElementById("admin-secret-pass").value;
+        if(passInput === "ayberkim") {
+            document.getElementById("admin-auth-segment").style.display = "none";
+            document.getElementById("admin-console-segment").style.display = "block";
+            triggerCyberHudToast("ROOT ERİŞİMİ YETKİLENDİRİLDİ");
         } else {
-            adminBox.style.display = "block";
+            alert("KRİTİK GÜVENLİK DUVARI: Şifre Geçersiz!");
+            triggerCyberHudToast("YETKİSİZ ERİŞİM ENGELLENDİ");
         }
     }
 
-    // KURAL: Giriş şifresi tam olarak 'ayberkim' olmak zorundadır!
-    function authenticateAdminSession() {
-        let inputPasswordValue = document.getElementById("admin-password-input").value;
-        if(inputPasswordValue === "ayberkim") {
-            document.getElementById("admin-auth-zone").style.display = "none";
-            document.getElementById("admin-content-zone").style.display = "block";
-            showCyberHudToast("ROOT ERİŞİMİ ONAYLANDI");
-        } else {
-            alert("SİBER GÜVENLİK DUVARI: Geçersiz Yönetici Şifresi!");
-            showCyberHudToast("YETKİSİZ ERİŞİM REDDEDİLDİ");
-        }
-    }
-
-    function executeAdminBalanceInjection() {
-        let targetTelegramUser = document.getElementById("admin-target-user").value;
-        let injectionAmount = document.getElementById("admin-amount-input").value;
+    function fireAdminBalanceInjectionPayload() {
+        let targetId = document.getElementById("admin-inject-tg-id").value;
+        let amount = document.getElementById("admin-inject-amount").value;
         
-        if(!targetTelegramUser || !injectionAmount) {
-            alert("Hata: Lütfen tüm siber alanları doldurun.");
+        if(!targetId || !amount) {
+            alert("Hata: Tüm siber hücre alanları dolu olmalıdır.");
             return;
         }
 
         let adminPayload = {
             "action": "admin_add_balance",
-            "target_tg": targetTelegramUser,
-            "amount": parseFloat(injectionAmount)
+            "target_tg": targetId,
+            "amount": parseFloat(amount)
         };
         
-        telegramAppInstance.sendData(JSON.stringify(adminPayload));
-        alert("Bakiye Enjeksiyon Sinyali Çekirdeğe İletildi!");
-        showCyberHudToast("Bakiye Sinyali Uçuruldu");
+        tgWebAppInstance.sendData(JSON.stringify(adminPayload));
+        alert("Bakiye Enjeksiyon Emri Çekirdeğe İletildi!");
+        triggerCyberHudToast("Enjeksiyon Sinyali Başarılı");
     }
 
     /* ==========================================================================
        21. GLOBAL TOAST HUD NOTIFIER FEEDBACK SYSTEM
        ========================================================================== */
-    function showCyberHudToast(messageText) {
-        let toastNode = document.getElementById("cyber-hud-toast");
-        toastNode.innerText = messageText;
-        toastNode.classList.add("visible");
-        
+    function triggerCyberHudToast(text) {
+        let toast = document.getElementById("cyber-toast-hud");
+        toast.innerText = text;
+        toast.classList.add("active");
         setTimeout(() => {
-            toastNode.classList.remove("visible");
-        }, 2200);
+            toast.classList.remove("active");
+        }, 2000);
     }
 
-    // Ekran İlk Yüklendiğinde Fiyatlandırma Tablosunu Hesapla
     window.onload = function() {
-        calculateDynamicPricingMatrix();
-        showCyberHudToast("Siber Sistem Entegre Edildi");
+        runLivePricingCalculationEngine();
+        triggerCyberHudToast("Mavi Güvenli Panel Yüklendi");
     };
 </script>
 </body>
