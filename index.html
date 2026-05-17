@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Siber SMS Global UI v4.0</title>
+    <!-- Telegram WebApp Çekirdek Yapısı -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Google Fonts Matrix & Cyber Font Entegrasyonu -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =====================================================================
+           1. CORE MATRIX STYLES & VARIABLES
+        ===================================================================== */
+        :root {
+            --matrix-bg: #05080c;
+            --panel-dark: #0c1017;
+            --panel-light: #141a24;
+            --cyber-green: #00ff66;
+            --cyber-blue: #00f0ff;
+            --cyber-red: #ff2a5f;
+            --cyber-yellow: #ffb700;
+            --text-main: #ffffff;
+            --text-muted: #6e7681;
+            --neon-glow-green: rgba(0, 255, 102, 0.15);
+            --neon-glow-blue: rgba(0, 240, 255, 0.15);
+            --border-glow: #21262d;
+            --font-cyber: 'Orbitron', sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--matrix-bg);
+            color: var(--text-main);
+            font-family: var(--font-cyber);
+            margin: 0;
+            padding: 12px;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Arka Plan Hareketli Siber Izgara Efekti */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: linear-gradient(rgba(18, 24, 38, 0.1) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(18, 24, 38, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .cyber-wrapper {
+            width: 100%;
+            max-width: 480px;
+            background: linear-gradient(145deg, var(--panel-dark), #080b11);
+            border: 2px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            position: relative;
+        }
+
+        /* =====================================================================
+           2. HEADER & USER SYSTEM CARD
+        ===================================================================== */
+        .cyber-header {
+            text-align: center;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .cyber-header h1 {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--cyber-green);
+            text-shadow: 0 0 10px var(--neon-glow-green);
+            margin: 0 0 6px 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .system-status-bar {
+            font-family: var(--font-code);
+            font-size: 11px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--cyber-green);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px var(--cyber-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 102, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(0, 255, 102, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 102, 0); }
+        }
+
+        /* Kullanıcı Kimlik Kartı - Benzersiz ID Mekanizması */
+        .user-identity-card {
+            background-color: var(--panel-light);
+            border: 1px solid var(--cyber-blue);
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.05);
+        }
+
+        .id-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .id-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-family: var(--font-code);
+            text-transform: uppercase;
+        }
+
+        .id-value {
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--cyber-blue);
+            font-family: var(--font-code);
+            letter-spacing: 1px;
+        }
+
+        .balance-box {
+            text-align: right;
+        }
+
+        .balance-value {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--cyber-green);
+            font-family: var(--font-code);
+        }
+
+        /* =====================================================================
+           3. DYNAMIC NAVIGATION TABS
+        ===================================================================== */
+        .cyber-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border-glow);
+            padding-bottom: 8px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: var(--panel-light);
+            border: 1px solid var(--border-glow);
+            color: var(--text-muted);
+            padding: 10px 4px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.25s ease;
+            font-family: var(--font-cyber);
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            color: var(--text-main);
+            border-color: var(--cyber-green);
+            background: linear-gradient(to bottom, var(--panel-light), rgba(0, 255, 102, 0.03));
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.05);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* =====================================================================
+           4. FORM CONFIGURATIONS & COMPONENT ELEMENTS
+        ===================================================================== */
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .cyber-select, .cyber-input {
+            width: 100%;
+            padding: 12px 14px;
+            background-color: var(--panel-light);
+            border: 1px solid var(--border-glow);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 14px;
+            font-family: var(--font-cyber);
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .cyber-select:focus, .cyber-input:focus {
+            border-color: var(--cyber-green);
+            box-shadow: 0 0 8px var(--neon-glow-green);
+        }
+
+        .cyber-input-blue:focus {
+            border-color: var(--cyber-blue) !important;
+            box-shadow: 0 0 8px var(--neon-glow-blue) !important;
+        }
+
+        /* Custom Select Arrow Indicator */
+        .form-group .input-wrapper::after {
+            content: '▼';
+            font-size: 10px;
+            color: var(--text-muted);
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .no-arrow::after {
+            display: none !important;
+        }
+
+        /* Price Notification Tag */
+        .price-badge {
+            margin-top: 6px;
+            background: rgba(0, 255, 102, 0.05);
+            border: 1px dashed var(--cyber-green);
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 11px;
+            font-family: var(--font-code);
+            display: flex;
+            justify-content: space-between;
+            color: var(--cyber-green);
+        }
+
+        /* =====================================================================
+           5. PREMIUM MATRIX BUTTONS
+        ===================================================================== */
+        .cyber-core-btn {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            border: 2px solid var(--cyber-green);
+            color: var(--cyber-green);
+            font-family: var(--font-cyber);
+            font-size: 14px;
+            font-weight: 900;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-core-btn:active {
+            transform: scale(0.98);
+        }
+
+        .cyber-core-btn:hover {
+            background-color: var(--cyber-green);
+            color: var(--matrix-bg);
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.4);
+        }
+
+        .btn-blue {
+            border-color: var(--cyber-blue);
+            color: var(--cyber-blue);
+        }
+
+        .btn-blue:hover {
+            background-color: var(--cyber-blue);
+            color: var(--matrix-bg);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+        }
+
+        .btn-red {
+            border-color: var(--cyber-red);
+            color: var(--cyber-red);
+        }
+
+        .btn-red:hover {
+            background-color: var(--cyber-red);
+            color: var(--matrix-bg);
+            box-shadow: 0 0 20px rgba(255, 42, 95, 0.4);
+        }
+
+        /* =====================================================================
+           6. LIVE RECENT OPERATIONS LOG & HISTORY LISTS
+        ===================================================================== */
+        .operations-container {
+            background-color: rgba(12, 16, 23, 0.7);
+            border: 1px solid var(--border-glow);
+            border-radius: 10px;
+            padding: 10px;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .op-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+            font-family: var(--font-code);
+            font-size: 11px;
+        }
+
+        .op-row:last-child {
+            border-bottom: none;
+        }
+
+        .op-tag {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .tag-success { background: rgba(0, 255, 102, 0.1); color: var(--cyber-green); }
+        .tag-pending { background: rgba(0, 240, 255, 0.1); color: var(--cyber-blue); }
+        .tag-failed { background: rgba(255, 42, 95, 0.1); color: var(--cyber-red); }
+
+        .op-text { color: var(--text-main); font-weight: 500; }
+        .op-time { color: var(--text-muted); }
+
+        /* Custom Minimal Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--panel-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--border-glow); border-radius: 10px; }
+
+        /* =====================================================================
+           7. SYSTEM FOOTER INFO
+        ===================================================================== */
+        .cyber-footer {
+            text-align: center;
+            font-family: var(--font-code);
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 16px;
+            border-top: 1px solid var(--border-glow);
+            padding-top: 10px;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cyber-wrapper">
+        
+        <!-- HEADER BLOCK -->
+        <div class="cyber-header">
+            <h1>Siber SMS Engine</h1>
+            <div class="system-status-bar">
+                <span><span class="status-dot"></span> SECURE TUNNEL ACTIVE</span>
+                <span>v4.0 CODENAME: ANIL</span>
+            </div>
+        </div>
+
+        <!-- 6 HANELİ RASTGELE KULLANICI ID VE GİZLİ BAKİYE PANELİ -->
+        <div class="user-identity-card">
+            <div class="id-details">
+                <span class="id-label">Müşteri Siber Kimliği</span>
+                <span class="id-value" id="ui-user-id">YÜKLENİYOR...</span>
+            </div>
+            <div class="balance-box">
+                <div class="id-label" style="text-align: right;">Güncel Cüzdan</div>
+                <span class="balance-value" id="ui-user-balance">0.00 ₺</span>
+            </div>
+        </div>
+
+        <!-- SEKMELİ KONTROL NAVİGASYONU -->
+        <div class="cyber-tabs">
+            <button class="tab-btn active" onclick="switchCyberTab('order-tab', this)">⚡ Numara Al</button>
+            <button class="tab-btn" onclick="switchCyberTab('query-tab', this)">📩 Kod Sorgula</button>
+            <button class="tab-btn" onclick="switchCyberTab('history-tab', this)">📊 İşlemlerim</button>
+        </div>
+
+        <!-- =====================================================================
+           SEKME 1: NUMARA TAHSİS ETME ALANI
+        ===================================================================== -->
+        <div id="order-tab" class="tab-content active">
+            <div class="form-group">
+                <label for="srv-select">🤖 ENTEGRE SİBER SERVİS</label>
+                <div class="input-wrapper">
+                    <select id="srv-select" class="cyber-select" onchange="calculatePrice()">
+                        <option value="1" data-cost="15.00">WhatsApp Premium</option>
+                        <option value="2" data-cost="8.50">Instagram HQ</option>
+                        <option value="5" data-cost="6.00">Google / YouTube Cloud</option>
+                        <option value="8" data-cost="12.00">Telegram Core</option>
+                        <option value="10" data-cost="5.00">TikTok Boost</option>
+                        <option value="15" data-cost="7.50">Twitter / X Verified</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="cnt-select">🌍 HEDEF RADYAL ÜLKE</label>
+                <div class="input-wrapper">
+                    <select id="cnt-select" class="cyber-select">
+                        <option value="90">Türkiye Cumhuriyeti (+90) 🇹🇷</option>
+                        <option value="1">Amerika Birleşik Devletleri (+1) 🇺🇸</option>
+                        <option value="7">Rusya Federasyonu (+7) 🇷🇺</option>
+                        <option value="62">Endonezya (+62) 🇮🇩</option>
+                        <option value="44">İngiltere (+44) 🇬🇧</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="price-badge">
+                <span>Tahmini Operasyon Tutarı:</span>
+                <span id="computed-price" style="font-weight: bold;">15.00 ₺</span>
+            </div>
+
+            <button class="cyber-core-btn" onclick="triggerPurchase()">🚀 Güvenli Bağlantıyla Satın Al</button>
+        </div>
+
+        <!-- =====================================================================
+           SEKME 2: MANUEL SMS SORGULAMA VE İPTAL ALANI
+        ===================================================================== -->
+        <div id="query-tab" class="tab-content">
+            <div class="form-group">
+                <label for="ord-id-input">🆔 SİPARİŞ HASH NUMARASI (ORDER ID)</label>
+                <div class="input-wrapper no-arrow">
+                    <input type="number" id="ord-id-input" class="cyber-input cyber-input-blue" placeholder="Örn: 849302">
+                </div>
+            </div>
+
+            <button class="cyber-core-btn btn-blue" onclick="triggerCheckOrder()">📩 SMS Kodunu Ağdan Çek</button>
+            <button class="cyber-core-btn btn-red" onclick="triggerCancelOrder()">❌ Numarayı İptal Et & İade Al</button>
+        </div>
+
+        <!-- =====================================================================
+           SEKME 3: YEREL SİPARİŞ GEÇMİŞİ LOG ALANI
+        ===================================================================== -->
+        <div id="history-tab" class="tab-content">
+            <div class="form-group">
+                <label>📋 BU CÜZDANA AİT SON HAREKETLER</label>
+                <div class="operations-container" id="operations-log-list">
+                    <!-- JavaScript Tarafından Dinamik Doldurulacak -->
+                    <div class="op-row">
+                        <span class="op-time">Sistem</span>
+                        <span class="op-text">Yeni Kripto Kimlik Üretildi</span>
+                        <span class="op-tag tag-success">OK</span>
+                    </div>
+                </div>
+            </div>
+            <button class="cyber-core-btn btn-blue" style="font-size: 11px; padding: 8px;" onclick="clearLocalHistory()">🧹 Ekran Günlüğünü Temizle</button>
+        </div>
+
+        <!-- SYSTEM FOOTER -->
+        <div class="cyber-footer">
+            SECURITY KEY ENCRYPTED WITH END-TO-END CRYPTO<br>
+            © 2026 CYBER SMS BOT - ALL RIGHTS RESERVED
+        </div>
+
+    </div>
+
+    <!-- =====================================================================
+       8. CORE ENGINE JAVASCRIPT MECHANISM
+    ===================================================================== -->
+    <script>
+        // Telegram WebApp Kapsayıcısını Başlat
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        // Yerel Hafıza Anahtarları
+        const STORAGE_ID_KEY = "cyber_user_6_digit_id";
+        const STORAGE_BAL_KEY = "cyber_user_local_balance";
+        const STORAGE_HIST_KEY = "cyber_user_action_history_v4";
+
+        let currentUserId = "";
+        let currentUserBalance = 0.00;
+        let actionHistory = [];
+
+        // Sayfa Açıldığında Çekirdeği Ateşle
+        window.onload = function() {
+            initializeCyberUser();
+            calculatePrice();
+            renderHistory();
+        };
+
+        // 6 Haneli Benzersiz ID ve Bakiye Sistem Motoru
+        function initializeCyberUser() {
+            // 1. Kullanıcı ID Ataması
+            let savedId = localStorage.getItem(STORAGE_ID_KEY);
+            if (!savedId) {
+                // Tamamen rastgele 6 haneli benzersiz sayı üret (100000 - 999999)
+                savedId = Math.floor(100000 + Math.random() * 900000).toString();
+                localStorage.setItem(STORAGE_ID_KEY, savedId);
+                addLogToLocal("Sistem", "Yeni Hesap Kimliği Tanımlandı", "success");
+            }
+            currentUserId = savedId;
+            document.getElementById("ui-user-id").innerText = "#" + currentUserId;
+
+            // 2. Kullanıcı Özel Bakiye Ataması
+            let savedBalance = localStorage.getItem(STORAGE_BAL_KEY);
+            if (savedBalance === null) {
+                // Yeni başlayan her siber kullanıcıya deneme amaçlı 50 TL bakiye tanımlayalım kanka!
+                currentUserBalance = 50.00;
+                localStorage.setItem(STORAGE_BAL_KEY, currentUserBalance.toFixed(2));
+            } else {
+                currentUserBalance = parseFloat(savedBalance);
+            }
+            updateBalanceDisplay();
+        }
+
+        // Arayüz Bakiye Güncelleme Fonksiyonu
+        function updateBalanceDisplay() {
+            document.getElementById("ui-user-balance").innerText = currentUserBalance.toFixed(2) + " ₺";
+        }
+
+        // Sekme Değiştirici Mekanizma
+        function switchCyberTab(tabId, element) {
+            const contents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].classList.remove('active');
+            }
+            const tabs = document.getElementsByClassName('tab-btn');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
+        }
+
+        // Dinamik Fiyat Hesaplayıcı
+        function calculatePrice() {
+            const selectEl = document.getElementById("srv-select");
+            const selectedOption = selectEl.options[selectEl.selectedIndex];
+            const cost = selectedOption.getAttribute("data-cost");
+            document.getElementById("computed-price").innerText = cost + " ₺";
+        }
+
+        // 1. Sinyal: Numara Satın Alma Emri
+        function triggerPurchase() {
+            const service = document.getElementById('srv-select').value;
+            const selectEl = document.getElementById("srv-select");
+            const serviceName = selectEl.options[selectEl.selectedIndex].text;
+            const country = document.getElementById('cnt-select').value;
+            
+            const cost = parseFloat(selectEl.options[selectEl.selectedIndex].getAttribute("data-cost"));
+
+            // Bakiye Kontrolü (Arayüz Seviyesinde Bloklama)
+            if (currentUserBalance < cost) {
+                alert("❌ Yetersiz Bakiye! Lütfen kurucudan bakiye yükleme talebinde bulunun.");
+                addLogToLocal("Bakiye", "Yetersiz bakiye nedeniyle iptal", "failed");
+                return;
+            }
+
+            // Bakiyeyi geçici olarak düş, bot onaylamazsa iade mekanizması çalışacak
+            currentUserBalance -= cost;
+            localStorage.setItem(STORAGE_BAL_KEY, currentUserBalance.toFixed(2));
+            updateBalanceDisplay();
+
+            const data = {
+                action: "web_purchase_number",
+                user_id: currentUserId,
+                service: service,
+                country: country,
+                cost: cost
+            };
+            
+            addLogToLocal(serviceName.split(' ')[0], "Numara İstendi (-" + cost + "₺)", "pending");
+            
+            // Sinyali Telegram'daki bot.py koduna fırlat
+            tg.sendData(JSON.stringify(data));
+            tg.close();
+        }
+
+        // 2. Sinyal: Kod Sorgulama Emri
+        function triggerCheckOrder() {
+            const orderId = document.getElementById('ord-id-input').value;
+            if(!orderId) { alert("Siber Hata: Lütfen geçerli bir Sipariş ID girin!"); return; }
+            
+            const data = {
+                action: "web_check_order",
+                user_id: currentUserId,
+                order_id: orderId
+            };
+            
+            addLogToLocal("Sorgu", "ID: " + orderId + " Sorgulandı", "pending");
+            tg.sendData(JSON.stringify(data));
+            tg.close();
+        }
+
+        // 3. Sinyal: Sipariş İptal Etme Emri
+        function triggerCancelOrder() {
+            const orderId = document.getElementById('ord-id-input').value;
+            if(!orderId) { alert("Siber Hata: Lütfen iptal edilecek Sipariş ID girin!"); return; }
+            
+            const data = {
+                action: "web_cancel_order",
+                user_id: currentUserId,
+                order_id: orderId
+            };
+            
+            addLogToLocal("İptal", "ID: " + orderId + " İptal İstendi", "failed");
+            tg.sendData(JSON.stringify(data));
+            tg.close();
+        }
+
+        // Yerel Geçmişe Log Ekleme Fonksiyonu
+        function addLogToLocal(tag, text, type) {
+            let localHist = localStorage.getItem(STORAGE_HIST_KEY);
+            let historyArr = localHist ? JSON.parse(localHist) : [];
+            
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+            
+            const newLog = {
+                tag: tag,
+                text: text,
+                type: type,
+                time: timeStr
+            };
+            
+            historyArr.unshift(newLog); // En başa ekle
+            if(historyArr.length > 25) historyArr.pop(); // Max 25 log tut
+            
+            localStorage.setItem(STORAGE_HIST_KEY, JSON.stringify(historyArr));
+            renderHistory();
+        }
+
+        // Logları Ekrana Basma Fonksiyonu
+        function renderHistory() {
+            let localHist = localStorage.getItem(STORAGE_HIST_KEY);
+            let historyArr = localHist ? JSON.parse(localHist) : [];
+            const container = document.getElementById("operations-log-list");
+            
+            if(historyArr.length === 0) {
+                container.innerHTML = `<div class="op-row"><span style="color:var(--text-muted)">Günlük kaydı temiz.</span></div>`;
+                return;
+            }
+
+            let htmlContent = "";
+            historyArr.forEach(log => {
+                let tagClass = "tag-success";
+                if(log.type === "pending") tagClass = "tag-pending";
+                if(log.type === "failed") tagClass = "tag-failed";
+
+                htmlContent += `
+                    <div class="op-row">
+                        <span class="op-time">${log.time}</span>
+                        <span class="op-text">[${log.tag}] ${log.text}</span>
+                        <span class="op-tag ${tagClass}">${log.type.toUpperCase()}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = htmlContent;
+        }
+
+        // Yerel Geçmişi Temizleme
+        function clearLocalHistory() {
+            localStorage.removeItem(STORAGE_HIST_KEY);
+            renderHistory();
+        }
+    </script>
+</body>
+</html>
